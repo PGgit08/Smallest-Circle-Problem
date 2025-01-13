@@ -161,8 +161,10 @@ def welzls(points, bounds):
 
 # algorithm demo
 # points = [
-#     (random.uniform(-100, 100), random.uniform(-100, 100)) for _ in range(50)
+#     (random.uniform(-100, 100), random.uniform(-100, 100)) for _ in range(400)
 # ]
+
+# print(points)
 
 points = test.test_points
 
@@ -192,7 +194,7 @@ length = time.time() * 10000000 - start
 print("Welzl's Duration (micro seconds):", length)
 
 
-circle, hull = cc, ch
+circle, hull = wc, wh
 
 print("---- Demo ----")
 print("Center:", circle.center, "Radius:", circle.radius)
