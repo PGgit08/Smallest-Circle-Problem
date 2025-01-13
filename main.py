@@ -1,3 +1,4 @@
+import time
 import timeit
 import matplotlib.pyplot as plt
 from itertools import combinations
@@ -47,11 +48,7 @@ def form_circle(points):
     else:
         return Circle(None, None)
 
-def brute_force(points):
-    # this contribution to time is technically not considered in the research paper
-    pairs = combinations(points, 2)
-    triplets = combinations(points, 3)
-
+def brute_force(points, pairs, triplets):
     # O(n)
     def encloses_points(circle):
         for point in points:
@@ -81,7 +78,7 @@ def brute_force(points):
     
     return smallest_circle
 
-def convex_hull(points):
+def convex_hull(points, pairs, triplets):
     def counterclockwise(p1, p2, p3):
         # cross product (COPIED FROM: https://www.geeksforgeeks.org/orientation-3-ordered-points/)
         slope1 = (p2[1] - p1[1]) * (p3[0] - p2[0])
@@ -111,6 +108,7 @@ def convex_hull(points):
 
         idx = 0
 
+        # O(n)
         while idx < len(sorted_points):
             point = sorted_points[idx]
 
@@ -134,7 +132,7 @@ def convex_hull(points):
         return hull
 
     hull = graham_scan()
-    circle = brute_force(hull)
+    circle = brute_force(hull, pairs, triplets)
 
     return circle, hull
 
@@ -165,32 +163,33 @@ points = [
     (random.uniform(-100, 100), random.uniform(-100, 100)) for _ in range(50)
 ]
 
-# time different algorithms
-brute_force_time = timeit.Timer(
-    "brute_force(points)", 
-    "from __main__ import brute_force, points;"
-).timeit(number=1)
+# print times of all algorithms
+pairs = combinations(points, 2)
+triplets = combinations(points, 3)
 
-convex_hull_time = timeit.Timer(
-    "convex_hull(points)", 
-    "from __main__ import convex_hull, points;"
-).timeit(number=1)
+start = time.time()
+bc, bh = brute_force(points, pairs, triplets), []
+length = time.time() - start
 
-welzls_time = timeit.Timer(
-    "welzls(points, [])", 
-    "from __main__ import welzls, points;"
-).timeit(number=1)
+print("Brute Force Duration:", length)
 
-print("---- Time Comparison ----")
-print("Brute Force Time:", brute_force_time)
-print("Convex Hull Time:", convex_hull_time)
-print("Welzl's Time:", welzls_time)
-print()
+pairs = combinations(points, 2)
+triplets = combinations(points, 3)
 
-# UNCOMMENT ONE:
-# circle, hull = brute_force(points), []
-circle, hull = convex_hull(points)
-# circle, hull = welzls(points, []), []
+start = time.time()
+cc, ch = convex_hull(points, pairs, triplets)
+length = time.time() - start
+
+print("Convex Hull Duration:", length)
+
+start = time.time() * 10000000
+wc, wh = welzls(points, []), []
+length = time.time() * 10000000 - start
+
+print("Welzl's Duration (micro seconds):", length)
+
+
+circle, hull = cc, ch
 
 print("---- Demo ----")
 print("Center:", circle.center, "Radius:", circle.radius)
