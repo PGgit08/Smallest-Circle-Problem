@@ -1,10 +1,11 @@
 import time
-import timeit
 import matplotlib.pyplot as plt
 from itertools import combinations
 import math
 import numpy as np
 import random
+
+import test
 
 class Circle:
     def __init__(self, center, radius):
@@ -159,9 +160,11 @@ def welzls(points, bounds):
     return welzls(points, bounds.copy())
 
 # algorithm demo
-points = [
-    (random.uniform(-100, 100), random.uniform(-100, 100)) for _ in range(50)
-]
+# points = [
+#     (random.uniform(-100, 100), random.uniform(-100, 100)) for _ in range(50)
+# ]
+
+points = test.test_points
 
 # print times of all algorithms
 pairs = combinations(points, 2)
